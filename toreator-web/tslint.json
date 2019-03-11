@@ -1,0 +1,27 @@
+{
+  "extends": [
+    "tslint:latest",
+    "tslint-react",
+    "tslint-eslint-rules",
+    "tslint-config-prettier",
+    "tslint-clean-code",
+    "tslint-sonarts"
+  ],
+  "rulesDirectory": [
+    "tslint-plugin-prettier"
+  ],
+  "rules": {
+    "prettier": true,
+    "ordered-imports": true,
+    "interface-name": [
+      true,
+      "never-prefix"
+    ],
+    "no-submodule-imports": false,
+    "no-implicit-dependencies": false,
+    "no-shadowed-variable": false,
+    "object-literal-sort-keys": false,
+    "jsx-no-lambda":false,
+    "no-nested-template-literals": false
+  }
+}

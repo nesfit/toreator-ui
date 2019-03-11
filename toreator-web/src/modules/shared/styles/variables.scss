@@ -1,0 +1,21 @@
+@import "mixins/functions";
+@import "mixins/breakpoints";
+
+$grid-breakpoints: (
+  xs: 0,
+  sm: 576px,
+  //phone
+    md: 768px,
+  //tablet
+    lg: 992px,
+  //desktop
+    xl: 1200px,
+  //large desktop
+) !default;
+
+@include _assert-ascending($grid-breakpoints, "$grid-breakpoints");
+@include _assert-starts-at-zero($grid-breakpoints);
+
+/* Fonts */
+
+/* Colors */

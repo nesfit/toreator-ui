@@ -1,0 +1,80 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<Flex/> default 1`] = `
+<StyledComponent
+  forwardedComponent={
+    Object {
+      "$$typeof": Symbol(react.forward_ref),
+      "attrs": Array [],
+      "componentStyle": ComponentStyle {
+        "componentId": "sc-bwzfXH",
+        "isStatic": false,
+        "rules": Array [
+          "
+  ",
+          [Function],
+          "
+  ",
+          [Function],
+          "
+  ",
+          [Function],
+          "
+  ",
+          [Function],
+          "
+  ",
+          [Function],
+          "
+  ",
+          [Function],
+          "
+  ",
+          [Function],
+          "
+  ",
+          [Function],
+          "
+  ",
+          [Function],
+          "
+  box-sizing: border-box;
+  ",
+          [Function],
+          "  
+  ",
+          [Function],
+          "  
+  ",
+          [Function],
+          "  
+",
+          "
+  display: flex;
+  ",
+          [Function],
+          ";
+  ",
+          [Function],
+          ";
+  ",
+          [Function],
+          ";
+",
+        ],
+      },
+      "displayName": "Styled(styled.div)",
+      "foldedComponentIds": Array [
+        "sc-bdVaJa",
+      ],
+      "render": [Function],
+      "styledComponentId": "sc-bwzfXH",
+      "target": "div",
+      "toString": [Function],
+      "warnTooManyClasses": [Function],
+      "withComponent": [Function],
+    }
+  }
+  forwardedRef={null}
+/>
+`;

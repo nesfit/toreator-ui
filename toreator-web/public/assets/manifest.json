@@ -1,0 +1,9 @@
+{
+  "short_name": "ToreatorUi",
+  "name": "ToreatorUi",
+  "start_url": "/",
+  "display": "standalone",
+  "scope": "/",
+  "background_color": "white",
+  "theme_color": "white"
+}

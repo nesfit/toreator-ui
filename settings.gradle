@@ -1,0 +1,3 @@
+rootProject.name = 'toreator-ui'
+include 'toreator-proxy'
+include 'toreator-web'

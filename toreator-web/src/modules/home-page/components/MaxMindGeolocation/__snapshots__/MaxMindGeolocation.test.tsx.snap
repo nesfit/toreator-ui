@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<MaxMindGeolocation/> parseArraysToList 1`] = `
+<ul>
+  <li>
+    p1
+    :
+     
+    v1
+  </li>
+  <li>
+    p2
+    :
+     
+    v2
+  </li>
+</ul>
+`;

@@ -1,0 +1,32 @@
+type Address {
+    id: ID!
+    netAddress: String
+    date: String,
+    month: String,
+    year: String,
+    time: String,
+    info: [Info]
+}
+
+type Info {
+    data:  String
+    addressId: ID
+}
+
+type Response {
+    status: String!
+    responseBody: String
+}
+
+# The Root Query for the application
+type Query {
+    addresses: [Address]!
+    addressInfo(address: String): [Address]!
+    addressByDate(address:String, date: String): [Address]!
+    addressByTime(address: String, time: String): [Address]!
+    addressByYear(address: String, year: String): [Address]!
+    addressByMonth(address: String, month: String): [Address]!
+    addressesIpv4: [Address]!
+    addressesIpv6: [Address]!
+    create(url: String): Response!
+}

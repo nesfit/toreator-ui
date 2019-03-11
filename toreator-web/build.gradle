@@ -1,0 +1,58 @@
+buildscript {
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+
+    dependencies {
+        classpath "com.moowork.gradle:gradle-node-plugin:1.2.0"
+    }
+}
+
+apply plugin: 'com.moowork.node'
+
+// https://github.com/yarnpkg/yarn/issues/841
+//task removeStrictSSL(type: YarnTask) {
+//    args = ["config", "set", "strict-ssl", "false"]
+//}
+
+def rootDir = project.projectDir
+
+
+task yarnInstall(type: YarnTask) {
+    args = ["install", "--frozen-lockfile", "--non-interactive"]
+    execOverrides {
+        it.workingDir = rootDir
+    }
+}
+
+task yarnStart(type: YarnTask) {
+    args = ["start"]
+    execOverrides {
+        it.workingDir = rootDir
+    }
+}
+
+task yarnTest(type: YarnTask) {
+    args = ["test:coverage"]
+    execOverrides {
+        it.workingDir = rootDir
+    }
+}
+
+node {
+    version = "10.12.0"
+    download = true
+}
+task build()
+build.dependsOn yarnInstall
+
+
+task runApi()
+task runWeb()
+runWeb.dependsOn  build
+runWeb.dependsOn  yarnStart
+
+task test()
+test.dependsOn yarnTest

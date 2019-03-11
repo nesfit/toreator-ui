@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "outDir": "./build/dev/",
+    "sourceMap": true,
+    "removeComments": true,
+    "noImplicitAny": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "target": "es6",
+    "lib": [ "es2015", "dom" ],
+    "allowSyntheticDefaultImports": true,
+    "jsx": "react"
+  },
+  "include": ["./src/**/*"]
+}

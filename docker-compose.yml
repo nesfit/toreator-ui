@@ -1,0 +1,10 @@
+version: '3'
+services:
+  toreator-web:
+    build: ./toreator-web
+    ports:
+    - "3000:3000"
+  toreator-proxy:
+    build: ./toreator-proxy
+    ports:
+    - "8080:8080"
