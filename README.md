@@ -477,20 +477,20 @@ This class contains configuration for cache
 * List of available caches
 
 ### CORS filter (CORSFilter)
-Filter implmentation to allow JavaScript OPTION requests
+Filter implementation to allow JavaScript OPTION requests
 
 ### Services (/service)
 Services are used to define requests, process requests and cache responses
 
-* ApiServiceImpl - API REST client to Toreator service with response parsing
+* ApiServiceImpl - API REST client for Toreator service with response parsing
 * CacheServiceImpl - Util cache functions
 * AddressServiceImpl, InfoServiceImpl, RequestServiceImpl -  request definitions for address, info or custom requests
 
 ### Resolvers (/resolver)
-Resolvers are used for postprocessing of Model fields. For address we can acquire data, which is postprocessing of Address object.
+Resolvers are used for postprocessing of model fields. For address we can acquire data, which is postprocessing of Address object.
 
 ### Models (/model)
-Models contains Object definition -> same as in schema definition. If getter or setter defined in schema definition is missing in model, it has to
+Models contains object definition -> same as in schema definition. If getter or setter defined in schema definition is missing in model, it has to
 be defined in Resolver. 
 
 For example *getInfo* getter is not in model, so it is in resolver.
