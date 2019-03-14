@@ -125,7 +125,6 @@ Deploy frontend or backend with provided docker configuration.
 In root frontend or backend directory run
 ```
 docker build . -t <name>:<version>
-
 ```
 Or use *docker-compose* command
 ```
@@ -196,7 +195,6 @@ You can add your reducer directly to store or inject it asynchronously.
 
 Create your reducer **myReducer.tsx**
 ```
-
 import {combineActions, handleActions} from "redux-actions";
 
 const defaultState = "";
@@ -210,43 +208,38 @@ const reducer = handleActions(
 );
 export default reducer;
 ```
-Add it to store **store.tsx**
+Add it to reducerRegistry **reducerRegistry.tsx**
 ```
 
 import myReducer from "./reducers/myReducer"
+
 ...
 
-const reducer = combine({
-  ...reducerRegistry.getReducers(),
-  // here add your reducers
-  myReducer: myReducer
-});
-const enhancers = composeEnhancers(applyMiddleware(sagaMiddleware));
+ public getReducers() {
+    return {
+      myReducer: myReducer,
+      ...this._reducers};
+  }
+  
+...
 
-const store = createStore(reducer, initialState, enhancers);
-store.runSaga = runSaga;
-
-//here add store.runSaga(rootSaga) if you want to use saga without injection
-
-// Replace the store's reducer whenever a new reducer is registered.
-reducerRegistry.setChangeListener(reducers => {
-  store.replaceReducer(combine(reducers));
-});
-
-export default store;
 ```
 #### Adding asynchronously to store
 Reducers and sagas can be injected asynchronously with implemented helper function in *common/store/helpers.tsx*
 
 **Example usage of async reducer and saga.**
 
-Create app container:
+Create an app container
 ```
+import {compose} from "redux";
+import * as React from "react";
+import {connect} from "react-redux";
 import reducer from "./reducers/myReducer";
+import {withInjectedReducersAndSagas} from "../../common/store/helpers";
 import saga from "./sagas/mySaga";
 import {myReducerAction} from "./actions/myActions";
 
-const ExampleContainer = ({value, myReducerAction}) =><div>My container!</div>
+const ExampleContainer = ({value, myReducerAction}) =><div onClick={()=>myReducerAction("click")}>{value}My container!</div>
 
 export default compose(
 	withInjectedReducersAndSagas({
@@ -267,11 +260,11 @@ export default compose(
 	connect(
 		(state)=>({
 				value: state["MY_REDUCER"].value
-			})
-		), 
+			}), 
 		(dispatch)=>({
 				myReducerAction: value => dispatch(myReducerAction(value))
 			})
+        )
 	)(ExampleContainer);
 
 ```
@@ -282,23 +275,24 @@ import {combineActions, handleActions} from "redux-actions";
 const defaultState = "";
 
 const reducer = handleActions(
-  {
-    ["MY_REDUCER_ACTION"]:
-      (state, {payload: {value}}) => value,
-  },
-  defaultState,
+    {
+        ["MY_REDUCER/MY_REDUCER_ACTION"]:
+            (state, {payload: {value}}) => value,
+    },
+    defaultState,
 );
 export default reducer;
 ```
 Saga definition **./sagas/mySaga**
-
 ```
+import {takeEvery} from "redux-saga/effects";
+
 const watchAction = function* watchAction() {
   yield;
 };
 
 function* rootSaga() {
-  yield takeEvery("MY_REDUCER_ACTION", watchAction);
+  yield takeEvery("MY_REDUCER/MY_REDUCER_ACTION", watchAction);
 }
 
 export default rootSaga;
