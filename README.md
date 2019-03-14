@@ -128,7 +128,7 @@ docker build . -t <name>:<version>
 ```
 Or use *docker-compose* command
 ```
-docker-compose up --built
+docker-compose up --build
 ```
 ## Styling
 
