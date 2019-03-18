@@ -78,9 +78,11 @@ public class CacheServiceImpl implements CacheService {
      * Checks if cache value is still valid.
      */
     public Boolean isInValidTimeRange(String lastModified) {
+        long ttl = ApiConstants.DEFAULT_CACHE_TTL!= null ?
+                Long.valueOf(ApiConstants.DEFAULT_CACHE_TTL) : 300000;
         if(lastModified!= null && !lastModified.isEmpty()) {
           return  (new Date(Long.parseLong(lastModified)).getTime() +
-                  ApiConstants.DEFAULT_CACHE_TTL ) > new Date().getTime();
+                  ttl) > new Date().getTime();
         }
         return false;
     }

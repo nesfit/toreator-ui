@@ -2,9 +2,22 @@ version: '3'
 services:
   toreator-web:
     build: ./toreator-web
+    networks:
+    - toreator
+    environment:
+#      - TOREATOR_PROXY_URL=https://toreator-proxy.nesad.fit.vutbr.cz/graphql
+      - TOREATOR_PROXY_URL=http://localhost:8080/graphql
     ports:
     - "3000:3000"
   toreator-proxy:
     build: ./toreator-proxy
+    networks:
+      - toreator
     ports:
-    - "8080:8080"
+      - "8080:8080"
+    environment:
+      - TOREATOR_BASE_URL=http://toreator.fit.vutbr.cz
+# 5 min
+      - TOREATOR_PROXY_CACHE_TTL=300000
+networks:
+  toreator:

@@ -4,7 +4,7 @@ package cz.fit.vutbr.constants;
  * Toreator Proxy constants.
  */
 public class ApiConstants {
-    public static final String BASE_URL = "http://toreator.fit.vutbr.cz";
+    public static final String BASE_URL = System.getenv("TOREATOR_BASE_URL");
     public static final String CACHE_ADDRESSES = "CACHE_ADDRESSES";
     public static final String CACHE_INFO = "CACHE_INFO";
     public static final String CACHE_ADDRESSES_DEFAULT = "CACHE_ADDRESSES_DEFAULT";
@@ -23,5 +23,5 @@ public class ApiConstants {
     public static final String PARAM_RESPONSE_BODY = "responseBody";
     public static final String PARAM_STATUS = "status";
     // Default in millis
-    public static final long DEFAULT_CACHE_TTL = 5000 * 60;
+    public static final String DEFAULT_CACHE_TTL = System.getenv("TOREATOR_PROXY_CACHE_TTL");
 }

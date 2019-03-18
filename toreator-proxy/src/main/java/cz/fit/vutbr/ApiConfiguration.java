@@ -35,7 +35,11 @@ public class ApiConfiguration {
     @Bean
     public RestTemplate restTemplate() {
         RestTemplate restTemplate = new RestTemplate();
-        restTemplate.setUriTemplateHandler(new DefaultUriBuilderFactory(ApiConstants.BASE_URL));
+        String url = ApiConstants.BASE_URL;
+        if(url == null){
+            url = "http://toreator.fit.vutbr.cz";
+        }
+        restTemplate.setUriTemplateHandler(new DefaultUriBuilderFactory(url));
         return restTemplate;
     }
 

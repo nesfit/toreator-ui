@@ -22,4 +22,5 @@ export interface FilterType {
   [key: string]: string;
 }
 
-export const API_ENDPOINT: string = "http://localhost:8080/graphql";
+// @ts-ignore
+export const API_ENDPOINT: string = window && window._env_ && window._env_.TOREATOR_PROXY_URL || "http://localhost:8080/graphql";
