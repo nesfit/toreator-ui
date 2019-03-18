@@ -16,7 +16,7 @@ services:
     ports:
       - "8080:8080"
     environment:
-      - TOREATOR_BASE_URL=http://toreator.fit.vutbr.cz
+      - TOREATOR_URL=http://toreator.fit.vutbr.cz
 # 5 min
       - TOREATOR_PROXY_CACHE_TTL=300000
 networks:
