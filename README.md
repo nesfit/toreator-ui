@@ -528,6 +528,10 @@ Schema definition with supporoted queries.
 
 ### Additional information
  default cache TTL is defined in ApiConstants (/constants)
+### Environment variable
+* TOREATOR_URL - Toreator service URL
+* TOREATOR_PROXY_URL - Toreator proxy URL with suffix "/graphql"
+* TOREATOR_PROXY_CACHE_TTL - Minimal proxy cache TTL for results
 
 ## Built With
 
