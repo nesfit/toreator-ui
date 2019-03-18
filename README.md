@@ -19,7 +19,7 @@ npm install -g yarn
 * [Gradle](https://gradle.org/)
 
 ## Build and Run application
-Application includes Docker configuration for *web* and *proxy*.
+Application contains Docker configuration for *web* and *proxy*.
 ### Docker enviroment
 Use docker command in root directory of the application
 ```
@@ -52,7 +52,7 @@ Gradle:
 ```
 gradle runWeb
 ```
-Available at [localhost:3000](http://localhost:3000)
+Available at [localhost:3000](http://localhost:3000).
 
 ### Backend (in toreator-proxy/)
 In backend directory install and run *proxy*.
@@ -65,8 +65,9 @@ gradle build
 ```
 gradle runApi
 ```
-Available at [localhost:8080](http://localhost:8080)
-Graphical UI available at [localhost:8080/graphiql](http://localhost:8080/graphiql)
+Available at [localhost:8080](http://localhost:8080).
+
+Graphical UI available at [localhost:8080/graphiql](http://localhost:8080/graphiql).
 
 ## Running the tests
 
@@ -112,23 +113,22 @@ Check tests for backend and frontend for more information.
 ```
 yarn run test:coverage
 ```
-Coverage threshold can be set in *jest.config.js*
+Coverage threshold can be modified in *jest.config.js*
 
 * *Precommit* is invoked before commit. Calls *lint* (static analyzer) to check coding styles.
 ```
 yarn run lint-staged
 ```
-Static analyzer can be set in *tslint.json*
+Static analyzer can be modified in *tslint.json*
 ## Deployment
 Deploy frontend or backend with provided docker configuration.
 In root frontend or backend directory run
 ```
 docker build . -t <name>:<version>
-
 ```
 Or use *docker-compose* command
 ```
-docker-compose up --built
+docker-compose up --build
 ```
 ## Styling
 
@@ -148,7 +148,7 @@ This theme is available in props of the styled component.
 
 Styled components are separated from components with business logic, they use file suffix *.styled.tsx*
 
-Padding based on breakpoints:
+Padding based on breakpoints
 ```
 <Box p={[2,2,3,3,4]} />
 ```
@@ -176,13 +176,15 @@ export const routes = {
     lazy(() => import(/* webpackChunkName: "HomePage" */ "./home-page")),
 };
 ```
-Routes are evaluated in **Router.tsx** class (modules/shared/components/Router.tsx). You can freely change loading component and other properties of **DynamicRouter** component.
+Routes are evaluated in **Router.tsx** class (modules/shared/components/Router.tsx). You can freely change loading component and other properties of the **DynamicRouter** component.
 Each page should be separate module  - lazy loaded.
 
 ## Redux and Sagas
 Generator provides support for redux and sagas with **async injection** feature. 
 This is basic flux implementation for controlling application state.
-This logic is used for api calls. In development mode redux actions can be seen in [Chrome Redux devtools](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd) 
+This logic is used for api calls. 
+
+In development mode redux actions can be seen in [Chrome Redux devtools](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd) 
 
 ### Store
 Store is defined in *common/store/store.tsx*. It contains store setup with reducers and sagas. Also includes Redux devtools extension for development.
@@ -193,7 +195,6 @@ You can add your reducer directly to store or inject it asynchronously.
 
 Create your reducer **myReducer.tsx**
 ```
-
 import {combineActions, handleActions} from "redux-actions";
 
 const defaultState = "";
@@ -207,43 +208,38 @@ const reducer = handleActions(
 );
 export default reducer;
 ```
-Add it to store **store.tsx**
+Add it to reducerRegistry **reducerRegistry.tsx**
 ```
 
 import myReducer from "./reducers/myReducer"
+
 ...
 
-const reducer = combine({
-  ...reducerRegistry.getReducers(),
-  // here add your reducers
-  myReducer: myReducer
-});
-const enhancers = composeEnhancers(applyMiddleware(sagaMiddleware));
+ public getReducers() {
+    return {
+      myReducer: myReducer,
+      ...this._reducers};
+  }
+  
+...
 
-const store = createStore(reducer, initialState, enhancers);
-store.runSaga = runSaga;
-
-//here add store.runSaga(rootSaga) if you want to use saga without injection
-
-// Replace the store's reducer whenever a new reducer is registered.
-reducerRegistry.setChangeListener(reducers => {
-  store.replaceReducer(combine(reducers));
-});
-
-export default store;
 ```
 #### Adding asynchronously to store
 Reducers and sagas can be injected asynchronously with implemented helper function in *common/store/helpers.tsx*
 
 **Example usage of async reducer and saga.**
 
-Create app container:
+Create an app container
 ```
+import {compose} from "redux";
+import * as React from "react";
+import {connect} from "react-redux";
 import reducer from "./reducers/myReducer";
+import {withInjectedReducersAndSagas} from "../../common/store/helpers";
 import saga from "./sagas/mySaga";
 import {myReducerAction} from "./actions/myActions";
 
-const ExampleContainer = ({value, myReducerAction}) =><div>My container!</div>
+const ExampleContainer = ({value, myReducerAction}) =><div onClick={()=>myReducerAction("click")}>{value}My container!</div>
 
 export default compose(
 	withInjectedReducersAndSagas({
@@ -264,11 +260,11 @@ export default compose(
 	connect(
 		(state)=>({
 				value: state["MY_REDUCER"].value
-			})
-		), 
+			}), 
 		(dispatch)=>({
 				myReducerAction: value => dispatch(myReducerAction(value))
 			})
+        )
 	)(ExampleContainer);
 
 ```
@@ -279,23 +275,24 @@ import {combineActions, handleActions} from "redux-actions";
 const defaultState = "";
 
 const reducer = handleActions(
-  {
-    ["MY_REDUCER_ACTION"]:
-      (state, {payload: {value}}) => value,
-  },
-  defaultState,
+    {
+        ["MY_REDUCER/MY_REDUCER_ACTION"]:
+            (state, {payload: {value}}) => value,
+    },
+    defaultState,
 );
 export default reducer;
 ```
 Saga definition **./sagas/mySaga**
-
 ```
+import {takeEvery} from "redux-saga/effects";
+
 const watchAction = function* watchAction() {
   yield;
 };
 
 function* rootSaga() {
-  yield takeEvery("MY_REDUCER_ACTION", watchAction);
+  yield takeEvery("MY_REDUCER/MY_REDUCER_ACTION", watchAction);
 }
 
 export default rootSaga;
@@ -328,6 +325,7 @@ export const ApiActions: Action = {
 *apiFulfilled* is action invoked after reponse is acquired from *toreator-proxy*
 
 Each request can define variety of props that will be send to **Saga** function described bellow.
+
 *cache* parameter is used to keep response until a page is refreshed. It is used for request that are not changing that often.
 
 **Important**: *getCustomRequest* method can be used for creating custom requests to *toreator-proxy* 
@@ -393,8 +391,10 @@ const watchApiRequest = function*(action: Action) {
 };
 
 ```
-Properties (query,variables, ...) are obtained from action creators in *ducks/actions/api.tsx*
+Properties (query,variables, ...) are obtained from action creators in *ducks/actions/api.tsx*.
+
 *Cache* prop and last value in cache are used to decide if request is needed.
+
 *dataType* prop is used to decide if response should be displayed in a table or as an information list. (because we can get two types of data structures)
 
 You can create another sagas and reducers.
@@ -442,8 +442,8 @@ export const getActiveFilter = createSelector(
 ```
 ### Containers/Components
 
-* HomePage.tsx - root home page container, registers reducers,sagas to store
-* SearchForm.tsx - form with search input and filter select
+* HomePage.tsx - Root home page container, registers reducers, sagas in store
+* SearchForm.tsx - Form with search input and filter select
 * Results.tsx - Result container that displays results
 * ResultFilters.tsx - Filters in result section (IPv4 and IPv6 filter)
 * History.tsx - History components that displays search path
@@ -471,20 +471,20 @@ This class contains configuration for cache
 * List of available caches
 
 ### CORS filter (CORSFilter)
-Filter implmentation to allow JavaScript OPTION requests
+Filter implementation to allow JavaScript OPTION requests
 
 ### Services (/service)
 Services are used to define requests, process requests and cache responses
 
-* ApiServiceImpl - API REST client to Toreator service with response parsing
+* ApiServiceImpl - API REST client for Toreator service with response parsing
 * CacheServiceImpl - Util cache functions
 * AddressServiceImpl, InfoServiceImpl, RequestServiceImpl -  request definitions for address, info or custom requests
 
 ### Resolvers (/resolver)
-Resolvers are used for postprocessing of Model fields. For address we can acquire data, which is postprocessing of Address object.
+Resolvers are used for postprocessing of model fields. For address we can acquire data, which is postprocessing of Address object.
 
 ### Models (/model)
-Models contains Object definition -> same as in schema definition. If getter or setter defined in schema definition is missing in model, it has to
+Models contains object definition -> same as in schema definition. If getter or setter defined in schema definition is missing in model, it has to
 be defined in Resolver. 
 
 For example *getInfo* getter is not in model, so it is in resolver.
