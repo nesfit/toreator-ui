@@ -92,7 +92,10 @@ module.exports = createConfig([
       contentBase: path.resolve(__dirname, "build/dev/"),
       overlay: true,
       compress: true,
-      port: 3000
+      port: 3000,
+      historyApiFallback: {
+        disableDotRule: true
+      }
     }),
     addPlugins([
       new HtmlWebpackPlugin({

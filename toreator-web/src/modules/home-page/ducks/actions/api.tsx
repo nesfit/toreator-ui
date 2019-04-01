@@ -41,10 +41,14 @@ export const filterKeyMappings: any = {
   MONTH: ["addressByMonth", "month"],
 };
 
-const normalizedFilterInput = (filterInput: string, activeFilter: string) => {
+export const normalizedFilterInput = (
+  filterInput: string,
+  activeFilter: string,
+) => {
   switch (activeFilter) {
     case Filters.DATE:
     case Filters.MONTH:
+    case Filters.YEAR:
     case Filters.TIME:
       return filterInput.replace(/\//g, "-");
     default:

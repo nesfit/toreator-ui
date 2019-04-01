@@ -4,11 +4,7 @@ import {connect} from "react-redux";
 import Box from "../../../shared/components/Box/Box";
 import AddressList from "../../components/AddressList/AddressList";
 import Info from "../../components/Info";
-import {
-  Filters,
-  FilterType,
-  ResultFilters as filters,
-} from "../../constants/toreator";
+import {Filters} from "../../constants/toreator";
 import {
   getDefaultApiListRequest,
   getIPv4ListRequest,
@@ -32,7 +28,10 @@ import {
   getActiveFilter,
   getActiveResultFilter,
   getIpAddress,
+  getRequestIpAddress,
+  getRequestParamFromFilter,
 } from "../../ducks/selectors/searchForm";
+import {initialize} from "../../utils/results";
 import History from "../History";
 import ResultFilters from "../ResultFilters";
 import {
@@ -46,7 +45,6 @@ import {
 
 interface Props {
   setIpAddress: (address: string) => void;
-  addressInfoRequest: (address: string) => void;
   activeResultFilter: string;
   getDefaultIpList: () => void;
   getIPv4ListRequest: () => void;
@@ -59,11 +57,12 @@ interface Props {
   hasSearchResults?: boolean;
   hasResults?: boolean;
   ipAddress?: string;
-  activeFilter?: FilterType;
+  activeFilter?: string;
   hasNoResults?: boolean;
   hasError?: boolean;
   hasInitialLoading?: boolean;
   resultDataType?: string;
+  pathname?: string;
 }
 
 interface State {
@@ -92,21 +91,7 @@ class Results extends React.Component<Props, State> {
     dataLength: DEFAULT_DATA_LENGTH,
   };
   public componentDidMount() {
-    const {
-      activeResultFilter,
-      getDefaultIpList,
-      getIPv4ListRequest,
-      getIPv6ListRequest,
-      setActiveFilter,
-    } = this.props;
-    setActiveFilter(Filters.NONE);
-    if (activeResultFilter === filters.NONE) {
-      getDefaultIpList();
-    } else if (activeResultFilter === filters.IPV4) {
-      getIPv4ListRequest();
-    } else if (activeResultFilter === filters.IPV6) {
-      getIPv6ListRequest();
-    }
+    initialize(this.props);
   }
 
   public getIpAddressInfo = ({
@@ -136,13 +121,10 @@ class Results extends React.Component<Props, State> {
         filterInput = "";
         break;
     }
-
-    this.props.submitForm({
-      ipAddress: id,
-      activeFilter,
-      filterInput,
-      clearHistory: false,
-    });
+    const activeFilterRequestParam = getRequestParamFromFilter(activeFilter);
+    return `/${getRequestIpAddress(id)}${
+      activeFilterRequestParam ? "/" + activeFilterRequestParam : ""
+    }${filterInput !== "" ? "/" + filterInput : ""}`;
   };
 
   /** Allows render on scroll */

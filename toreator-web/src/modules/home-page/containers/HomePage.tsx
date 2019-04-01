@@ -24,8 +24,11 @@ import Results from "./Results/Results";
 import SearchForm from "./SearchForm";
 interface Props {
   isLoading?: boolean;
+  location: {
+    pathname: string;
+  };
 }
-const HomePage = ({isLoading}: Props) => {
+const HomePage = ({isLoading, location: {pathname}}: Props) => {
   return (
     <Box>
       <Menu />
@@ -42,7 +45,7 @@ const HomePage = ({isLoading}: Props) => {
           <FormattedMessage {...messages.header} />
         </Box>
         <SearchForm />
-        <Results />
+        <Results pathname={pathname} />
         <Loading isLoading={isLoading}>
           <img height="80px" src={loading} />
         </Loading>

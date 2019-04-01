@@ -8,6 +8,17 @@ export const SearchPath = styled(Box)`
   color: gray;
   font-size: 16px;
   cursor: pointer;
+  a,
+  a:visited,
+  a:active,
+  a:hover {
+    text-decoration: none;
+    color: gray;
+  }
+  a:hover {
+    font-weight: 500;
+  }
+
   > span {
     white-space: nowrap;
   }
@@ -19,6 +30,7 @@ export const HistoryTitle = styled(Flex)`
 `;
 
 export const ResetButton = styled(Box)`
+  color: white;
   cursor: pointer;
   padding: 4px 8px;
   border-radius: 4px;
@@ -26,13 +38,6 @@ export const ResetButton = styled(Box)`
   img {
     display: block;
     padding-right: 4px;
-  }
-  a,
-  a:focus,
-  a:hover,
-  a:visited {
-    text-decoration: none;
-    color: white;
   }
   background: #e40421;
 `;

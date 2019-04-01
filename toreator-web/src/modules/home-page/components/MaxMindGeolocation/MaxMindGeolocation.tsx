@@ -1,15 +1,16 @@
 import {includes} from "ramda";
 import * as React from "react";
 import {FormattedMessage} from "react-intl";
+import {Link} from "react-router-dom";
 import {Filters} from "../../constants/toreator";
-import {InfoLink, Item} from "../Info/Info.styled";
+import {InfoLinkWrapper, Item} from "../Info/Info.styled";
 import messages from "./MaxMindGeolocation.messages";
 
 const hiddenFields = ["geolocation source", "timestamp"];
 
 export const parseArraysToList = (
   array: string[][],
-  getIpAddressInfo: (object: {}) => void,
+  getIpAddressInfo: (object: {}) => string,
 ) => {
   if (!array || array.length === 0) {
     return null;
@@ -23,13 +24,13 @@ export const parseArraysToList = (
             <li key={item[0]}>
               {item[0]}:{" "}
               {item[0] === "network" ? (
-                <InfoLink
-                  onClick={() =>
-                    getIpAddressInfo({filter: Filters.NONE, id: item[1]})
-                  }
-                >
-                  {item[1]}
-                </InfoLink>
+                <InfoLinkWrapper>
+                  <Link
+                    to={getIpAddressInfo({filter: Filters.NONE, id: item[1]})}
+                  >
+                    {item[1]}
+                  </Link>
+                </InfoLinkWrapper>
               ) : (
                 item[1]
               )}
@@ -43,7 +44,7 @@ export const parseArraysToList = (
 interface MaxMindGeolocationProps {
   maxMindGeolocation?: any;
   children?: React.ReactNode;
-  getIpAddressInfo: (object: {}) => void;
+  getIpAddressInfo: (object: {}) => string;
 }
 const MaxMindGeolocation = ({
   maxMindGeolocation = {},
@@ -61,16 +62,16 @@ const MaxMindGeolocation = ({
         {keys.map((key: string) => (
           <li key={key}>
             <FormattedMessage {...messages.from} />{" "}
-            <InfoLink
-              onClick={() =>
-                getIpAddressInfo({
+            <InfoLinkWrapper>
+              <Link
+                to={getIpAddressInfo({
                   filter: Filters.TIME,
                   time: `${key}`,
-                })
-              }
-            >
-              {key}
-            </InfoLink>
+                })}
+              >
+                {key}
+              </Link>
+            </InfoLinkWrapper>
             :
             <ul>
               {parseArraysToList(maxMindGeolocation[key], getIpAddressInfo)}

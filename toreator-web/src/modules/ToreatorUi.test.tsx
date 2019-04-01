@@ -73,7 +73,7 @@ describe("<ToreatorUi/>", () => {
           <DynamicRoute
             exact={true}
             loadAsyncModuleFn={[Function]}
-            path="/"
+            path="/**"
           />
         </Switch>
       </BrowserRouter>

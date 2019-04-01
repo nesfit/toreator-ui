@@ -4,7 +4,7 @@ import History from "./History";
 
 describe("<History/>", () => {
   test("default", () => {
-    const wrapper = shallow(<History getIpAddressInfo={() => {}} />);
+    const wrapper = shallow(<History getIpAddressInfo={() => ""} />);
     expect(wrapper).toMatchInlineSnapshot(`
 <ContextConsumer>
   <Component />

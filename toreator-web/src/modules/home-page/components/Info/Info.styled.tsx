@@ -9,10 +9,19 @@ font-size: 20px;
 padding-bottom: 24px;
 `;
 
-export const InfoLink = styled(Box)`
+export const InfoLinkWrapper = styled(Box)`
   display: inline-block;
   color: ${({theme: {palette}}) => palette.purpleColor};
-  cursor: pointer;
+
+  a {
+    text-decoration: none;
+    color: ${({theme: {palette}}) => palette.purpleColor};
+  }
+  a:visited,
+  a:active,
+  a:hover {
+    color: ${({theme: {palette}}) => palette.purpleColor};
+  }
 `;
 
 export const Item = styled.li``;

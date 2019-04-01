@@ -104,6 +104,15 @@ export const InfoList = styled(Box)`
   }
 `;
 export const Row = styled(Box)`
+  a {
+    text-decoration: none;
+    color: black;
+  }
+  a:visited,
+  a:active,
+  a:hover {
+    color: black;
+  }
   padding: 4px;
   margin: 4px;
   min-width: 200px;

@@ -4,7 +4,7 @@ import Info from "./Info";
 
 describe("<Info/>", () => {
   test("default", () => {
-    const wrapper = shallow(<Info data={{}} getIpAddressInfo={() => ({})} />);
+    const wrapper = shallow(<Info data={{}} getIpAddressInfo={() => ""} />);
     expect(wrapper).toMatchInlineSnapshot(`
 <styled.div
   pb={8}

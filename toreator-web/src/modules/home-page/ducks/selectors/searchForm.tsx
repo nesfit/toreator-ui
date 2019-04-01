@@ -1,5 +1,5 @@
 import {createSelector} from "reselect";
-import {SEARCH_FORM_REDUCER} from "../../constants/toreator";
+import {Filters, SEARCH_FORM_REDUCER} from "../../constants/toreator";
 import {FilterState} from "../reducers/searchForm";
 
 export const getSearchForm = (state: any): any => state[SEARCH_FORM_REDUCER];
@@ -25,3 +25,36 @@ export const getActiveResultFilter = createSelector(
 
 export const getRequestIpAddress = (ipAddress: string) =>
   ipAddress.replace("/", "-");
+
+export const getResponseIpAddress = (ipAddress: string) =>
+  ipAddress.replace("-", "/");
+
+export const getFilterParamFromRequest = (filterType: string) => {
+  switch (filterType) {
+    case "date":
+      return Filters.DATE;
+    case "month":
+      return Filters.MONTH;
+    case "time":
+      return Filters.TIME;
+    case "year":
+      return Filters.YEAR;
+    default:
+      return Filters.NONE;
+  }
+};
+
+export const getRequestParamFromFilter = (filterType: string) => {
+  switch (filterType) {
+    case Filters.DATE:
+      return "date";
+    case Filters.MONTH:
+      return "month";
+    case Filters.TIME:
+      return "time";
+    case Filters.YEAR:
+      return "year";
+    default:
+      return undefined;
+  }
+};

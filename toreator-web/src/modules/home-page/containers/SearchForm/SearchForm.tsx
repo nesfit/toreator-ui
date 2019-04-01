@@ -7,12 +7,13 @@ import {compose} from "redux";
 import Box from "../../../shared/components/Box";
 import Flex from "../../../shared/components/Flex";
 import {Filters as FilterParams} from "../../constants/toreator";
-import {setIpAddress, submitSearchForm} from "../../ducks/actions/searchForm";
+import {submitSearchForm} from "../../ducks/actions/searchForm";
 import {isLoadingLastRequest} from "../../ducks/selectors/api";
 import {
   getActiveFilter,
   getFilterInput,
   getIpAddress,
+  getResponseIpAddress,
 } from "../../ducks/selectors/searchForm";
 import {validateInput} from "../../utils/validators";
 import Filters from "../Filters";
@@ -102,7 +103,7 @@ const SearchForm = ({
   // @ts-ignore
   React.useEffect(
     () => {
-      setIpAddress(lastIpAddress);
+      setIpAddress(getResponseIpAddress(lastIpAddress));
       setFilterInput(lastFilterInput);
       setActiveFilterState(lastActiveFilter);
       setError({});
@@ -183,7 +184,7 @@ const SearchForm = ({
             </CustomFilterInput>
             <Box flex="0 0 auto" mt={[4, 4, 0]}>
               <Button type="submit" disabled={isLoadingLastRequest}>
-                <FormattedMessage {...messages.submit}/>
+                <FormattedMessage {...messages.submit} />
               </Button>
             </Box>
           </Flex>
@@ -203,7 +204,6 @@ export default compose(
       isLoading: isLoadingLastRequest(state),
     }),
     dispatch => ({
-      setIpAddress: (address: string) => dispatch(setIpAddress(address)),
       submitSearchForm: (form: object) => dispatch(submitSearchForm(form)),
     }),
   ),

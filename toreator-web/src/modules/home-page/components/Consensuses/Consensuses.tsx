@@ -1,31 +1,32 @@
 import * as React from "react";
 import {FormattedMessage} from "react-intl";
+import {Link} from "react-router-dom";
 import {Filters} from "../../constants/toreator";
-import {InfoLink, Item} from "../Info/Info.styled";
+import {InfoLinkWrapper, Item} from "../Info/Info.styled";
 import messages from "./Consensuses.messages";
 
 export const getTimeWithMessage = (
   item: string[],
   message: React.ReactNode,
-  getIpAddressInfo: (object: {}) => void,
+  getIpAddressInfo: (object: {}) => string,
 ) =>
   item.length === 2 ? (
     <span>
       {message}{" "}
       <span>
         ("
-        <InfoLink
-          onClick={() =>
-            getIpAddressInfo({
+        <InfoLinkWrapper>
+          <Link
+            to={getIpAddressInfo({
               filter: Filters.TIME,
               time: `${item[0]} ${item[1]}`,
-            })
-          }
-        >
-          {item[0]}
-          &nbsp;
-          {item[1]}
-        </InfoLink>
+            })}
+          >
+            {item[0]}
+            &nbsp;
+            {item[1]}
+          </Link>
+        </InfoLinkWrapper>
         ")
       </span>
     </span>
@@ -35,7 +36,7 @@ interface ConsensusesProps {
   inconsensus_val_after?: string[];
   inconsensus_fresh_until?: string[];
   inconsensus_val_until?: string[];
-  getIpAddressInfo: (object: {}) => void;
+  getIpAddressInfo: (object: {}) => string;
 }
 
 const Consensuses = ({

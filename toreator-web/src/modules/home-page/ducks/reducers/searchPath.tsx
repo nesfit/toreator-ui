@@ -1,5 +1,6 @@
 import {produce} from "immer";
 import {handleActions} from "redux-actions";
+import {MAX_SEARCH_PATH} from "../../constants/toreator";
 import {SearchPathActions} from "../actions/searchPath";
 
 export interface State {
@@ -19,10 +20,12 @@ export const reducer = handleActions(
       (state, {payload: {path}}: State) => {
         const index = state.path.indexOf(path);
         if (index >= 0) {
-          state.path = state.path.slice(0, index + 1);
           return state;
         }
         state.path.push(path);
+        if (state.path.length > MAX_SEARCH_PATH) {
+          state.path = state.path.slice(1);
+        }
         return state;
       },
     ),

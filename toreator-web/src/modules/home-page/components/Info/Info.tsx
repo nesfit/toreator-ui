@@ -1,16 +1,17 @@
-import {includes, isEmpty} from "ramda";
+import {isEmpty} from "ramda";
 import * as React from "react";
 import {FormattedMessage} from "react-intl";
+import {Link} from "react-router-dom";
 import Box from "../../../shared/components/Box";
 import {Filters} from "../../constants/toreator";
 import Consensuses from "../Consensuses/Consensuses";
 import MaxMindGeolocation from "../MaxMindGeolocation/MaxMindGeolocation";
 import messages from "./Info.messages";
-import {InfoLink, Item, Title} from "./Info.styled";
+import {InfoLinkWrapper, Item, Title} from "./Info.styled";
 
 interface Props {
   data: any;
-  getIpAddressInfo: (object: {}) => void;
+  getIpAddressInfo: (object: {}) => string;
 }
 
 const Info = ({data, getIpAddressInfo}: Props) => {
@@ -45,18 +46,18 @@ const Info = ({data, getIpAddressInfo}: Props) => {
           values={{nickname: nickname || ""}}
         />
         {publication.length === 2 && (
-          <InfoLink
-            onClick={() =>
-              getIpAddressInfo({
+          <InfoLinkWrapper>
+            <Link
+              to={getIpAddressInfo({
                 filter: Filters.TIME,
                 time: `${publication[0]} ${publication[1]}`,
-              })
-            }
-          >
-            {publication[0]}
-            &nbsp;
-            {publication[1]}
-          </InfoLink>
+              })}
+            >
+              {publication[0]}
+              &nbsp;
+              {publication[1]}
+            </Link>
+          </InfoLinkWrapper>
         )}
       </Title>
       <Box as="ul">
@@ -93,18 +94,18 @@ const Info = ({data, getIpAddressInfo}: Props) => {
                     (date: any = []) =>
                       date.length === 2 && (
                         <li key={date}>
-                          <InfoLink
-                            onClick={() =>
-                              getIpAddressInfo({
+                          <InfoLinkWrapper>
+                            <Link
+                              to={getIpAddressInfo({
                                 filter: Filters.TIME,
                                 time: `${date[0]} ${date[1]}`,
-                              })
-                            }
-                          >
-                            {date[0]}
-                            &nbsp;
-                            {date[1]}
-                          </InfoLink>
+                              })}
+                            >
+                              {date[0]}
+                              &nbsp;
+                              {date[1]}
+                            </Link>
+                          </InfoLinkWrapper>
                         </li>
                       ),
                   )}

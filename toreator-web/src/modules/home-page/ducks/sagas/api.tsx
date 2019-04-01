@@ -57,7 +57,6 @@ const watchApiRequest = function*(action: Action) {
 const watchDefaultListRequest = function*(action: Action) {
   const {requestKey} = action.payload.request;
   if (requestKeyMappings[requestKey]) {
-    yield put(resetSearchPath());
     yield put(setIpAddress(""));
   }
 };
@@ -67,7 +66,7 @@ const watchSubmitSearchForm = function*(action: Action) {
     ipAddress,
     filterInput = "",
     activeFilter = Filters.NONE,
-    clearHistory = true,
+    clearHistory = false,
   } = action.payload;
   yield put(setIpAddress(ipAddress));
   yield put(setFilterInput(filterInput));

@@ -43,7 +43,7 @@ class ToreatorUi extends React.PureComponent<Props> {
               <Switch>
                 <DynamicRoute
                   exact={true}
-                  path="/"
+                  path="/**"
                   loadAsyncModuleFn={routes.homePage}
                 />
               </Switch>
