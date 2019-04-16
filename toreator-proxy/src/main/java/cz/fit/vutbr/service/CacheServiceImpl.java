@@ -77,13 +77,24 @@ public class CacheServiceImpl implements CacheService {
     /**
      * Checks if cache value is still valid.
      */
-    public Boolean isInValidTimeRange(String lastModified) {
+    public Boolean isInValidTimeRange(String lastModified, long cacheControl) {
         long ttl = ApiConstants.DEFAULT_CACHE_TTL!= null ?
                 Long.valueOf(ApiConstants.DEFAULT_CACHE_TTL) : 300000;
+        // use TTL from cacheControl max-age header
+        if(cacheControl > 0){
+            ttl= cacheControl * 1000  ;
+        }
         if(lastModified!= null && !lastModified.isEmpty()) {
-          return  (new Date(Long.parseLong(lastModified)).getTime() +
-                  ttl) > new Date().getTime();
+            return  (new Date(Long.parseLong(lastModified)).getTime() +
+                    ttl) > new Date().getTime();
         }
         return false;
+    }
+
+    /**
+     * Checks if cache value is still valid.
+     */
+    public Boolean isInValidTimeRange(String lastModified) {
+       return isInValidTimeRange(lastModified,0);
     }
 }

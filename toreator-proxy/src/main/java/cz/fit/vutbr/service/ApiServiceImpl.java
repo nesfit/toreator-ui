@@ -43,6 +43,7 @@ public class ApiServiceImpl implements ApiService {
             }
             JSONObject jsonObj = new JSONObject(response.getBody());
             responseObject.put("status", response.getStatusCode());
+            responseObject.put("cacheControl", getCacheControlHeader(response));
             responseObject.put("lastModified", getLastModifiedHeader(response));
             responseObject.put("data", (JSONArray) jsonObj.get("result"));
             return responseObject;
@@ -73,6 +74,7 @@ public class ApiServiceImpl implements ApiService {
             JSONObject jsonObj = new JSONObject(response.getBody());
             responseObject.put("status", response.getStatusCode());
             responseObject.put("lastModified", getLastModifiedHeader(response));
+            responseObject.put("cacheControl", getCacheControlHeader(response));
             responseObject.put("data", jsonObj);
             return responseObject;
         } catch (HttpServerErrorException e) {
@@ -98,5 +100,21 @@ public class ApiServiceImpl implements ApiService {
             }
         }
         return new Date().getTime();
+    }
+
+    private long getCacheControlHeader(ResponseEntity<String> response){
+        String cacheControl = response.getHeaders().getCacheControl();
+        if(cacheControl != null){
+
+            try{
+                String maxAge = cacheControl.replace("max-age=","");
+                return Long.valueOf(maxAge);
+
+            }catch (Exception ignored){
+                LOG.warning("Could not parse CacheControl header: "+ cacheControl);
+            }
+        }
+        return 0;
+
     }
 }

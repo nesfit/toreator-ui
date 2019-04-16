@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import cz.fit.vutbr.constants.ApiConstants;
 import cz.fit.vutbr.helper.AddressHelper;
+import cz.fit.vutbr.helper.CacheHelper;
 import cz.fit.vutbr.model.Address;
 import cz.fit.vutbr.service.AddressService;
 import cz.fit.vutbr.service.CacheService;
@@ -30,6 +31,9 @@ public class AddressDao {
     @Autowired
     AddressService addressService;
 
+    @Autowired
+    CacheHelper cacheHelper;
+
 
     @Autowired
     InfoDao infoDao;
@@ -39,21 +43,22 @@ public class AddressDao {
      */
     public List<Address> getAddresses() {
         JSONObject cachedValue = (JSONObject) cacheService.getCacheValue(ApiConstants.CACHE_ADDRESSES_DEFAULT, "");
-        String lastModified = AddressHelper.getLastModified(cachedValue);
         // Default caching without request to Toreator
-        if (cachedValue != null  && cacheService.isInValidTimeRange(lastModified)) {
-            return getResultFromCachedValue(cachedValue);
+        List<Address> validCacheResults = cacheHelper.getValidResultsFromCache(cachedValue);
+        String lastModified = AddressHelper.getLastModified(cachedValue);
+        if(validCacheResults != null){
+            return validCacheResults;
         }
         JSONObject response = addressService.getAddressList(lastModified);
         if (response.get(ApiConstants.PARAM_STATUS).equals(HttpStatus.OK)) {
             JSONArray results = (JSONArray) response.get(ApiConstants.PARAM_DATA);
             List<Address> addresses =
                     resultsToList(results).stream().map(id -> addAddress(id, null)).collect(Collectors.toList());
-            addToCache(ApiConstants.CACHE_ADDRESSES_DEFAULT, "", addresses,
-                    response.get(ApiConstants.PARAM_LAST_MODIFIED));
+            cacheHelper.addToCache(ApiConstants.CACHE_ADDRESSES_DEFAULT, "", addresses,
+                    response.get(ApiConstants.PARAM_LAST_MODIFIED),response.get(ApiConstants.PARAM_CACHE_CONTROL));
             return addresses;
         } else if (response.get(ApiConstants.PARAM_STATUS).equals(HttpStatus.NOT_MODIFIED) && cachedValue != null) {
-            return getResultFromCachedValue(cachedValue);
+            return cacheHelper.getResultsFromCachedValue(cachedValue);
         }
         return new ArrayList<>();
     }
@@ -64,21 +69,21 @@ public class AddressDao {
     public List<Address> getAddresses(String address) {
         if (AddressHelper.hasURLNetworkPrefix(address)) {
             JSONObject cachedValue = (JSONObject) cacheService.getCacheValue(ApiConstants.CACHE_ADDRESSES, address);
+            List<Address> validCacheResults = cacheHelper.getValidResultsFromCache(cachedValue);
             String lastModified = AddressHelper.getLastModified(cachedValue);
-
-            if (cachedValue != null  && cacheService.isInValidTimeRange(lastModified)) {
-                return getResultFromCachedValue(cachedValue);
+            if(validCacheResults != null){
+                return validCacheResults;
             }
             JSONObject response = addressService.getAddressList(address, lastModified);
             if (response.get(ApiConstants.PARAM_STATUS).equals(HttpStatus.OK)) {
                 JSONArray results = (JSONArray) response.get(ApiConstants.PARAM_DATA);
                 List<Address> addresses =
                         resultsToList(results).stream().map(id -> addAddress(id, address)).collect(Collectors.toList());
-                addToCache(ApiConstants.CACHE_ADDRESSES, address, addresses,
-                        response.get(ApiConstants.PARAM_LAST_MODIFIED));
+                cacheHelper.addToCache(ApiConstants.CACHE_ADDRESSES, address, addresses,
+                        response.get(ApiConstants.PARAM_LAST_MODIFIED),response.get(ApiConstants.PARAM_CACHE_CONTROL));
                 return addresses;
             } else if (response.get(ApiConstants.PARAM_STATUS).equals(HttpStatus.NOT_MODIFIED) && cachedValue != null) {
-                return getResultFromCachedValue(cachedValue);
+                return cacheHelper.getResultsFromCachedValue(cachedValue);
             }
             return new ArrayList<>();
         }
@@ -92,21 +97,21 @@ public class AddressDao {
         if (date.isEmpty()) {
             JSONObject cachedValue =
                     (JSONObject) cacheService.getCacheValue(ApiConstants.CACHE_ADDRESSES_DATES, address);
+            List<Address> validCacheResults = cacheHelper.getValidResultsFromCache(cachedValue);
             String lastModified = AddressHelper.getLastModified(cachedValue);
-
-            if (cachedValue != null  && cacheService.isInValidTimeRange(lastModified)) {
-                return getResultFromCachedValue(cachedValue);
+            if(validCacheResults != null){
+                return validCacheResults;
             }
             JSONObject response = addressService.getAddressByDate(address, date, lastModified);
             if (response.get(ApiConstants.PARAM_STATUS).equals(HttpStatus.OK)) {
                 JSONArray results = (JSONArray) response.get(ApiConstants.PARAM_DATA);
                 List<Address> addresses = resultsToList(results).stream().map(id -> addAddressWithDate(id, address))
                         .collect(Collectors.toList());
-                addToCache(ApiConstants.CACHE_ADDRESSES_DATES, address, addresses,
-                        response.get(ApiConstants.PARAM_LAST_MODIFIED));
+                cacheHelper.addToCache(ApiConstants.CACHE_ADDRESSES_DATES, address, addresses,
+                        response.get(ApiConstants.PARAM_LAST_MODIFIED),response.get(ApiConstants.PARAM_CACHE_CONTROL));
                 return addresses;
             } else if (response.get(ApiConstants.PARAM_STATUS).equals(HttpStatus.NOT_MODIFIED) && cachedValue != null) {
-                return getResultFromCachedValue(cachedValue);
+                return cacheHelper.getResultsFromCachedValue(cachedValue);
             }
             return new ArrayList<>();
         }
@@ -120,21 +125,21 @@ public class AddressDao {
         if (year.isEmpty()) {
             JSONObject cachedValue =
                     (JSONObject) cacheService.getCacheValue(ApiConstants.CACHE_ADDRESSES_YEARS, address);
+            List<Address> validCacheResults = cacheHelper.getValidResultsFromCache(cachedValue);
             String lastModified = AddressHelper.getLastModified(cachedValue);
-
-            if (cachedValue != null  && cacheService.isInValidTimeRange(lastModified)) {
-                return getResultFromCachedValue(cachedValue);
+            if(validCacheResults != null){
+                return validCacheResults;
             }
             JSONObject response = addressService.getAddressByYear(address, year, lastModified);
             if (response.get(ApiConstants.PARAM_STATUS).equals(HttpStatus.OK)) {
                 JSONArray results = (JSONArray) response.get(ApiConstants.PARAM_DATA);
                 List<Address> addresses = resultsToList(results).stream().map(id -> addAddressWithYear(id, address))
                         .collect(Collectors.toList());
-                addToCache(ApiConstants.CACHE_ADDRESSES_YEARS, address, addresses,
-                        response.get(ApiConstants.PARAM_LAST_MODIFIED));
+                cacheHelper.addToCache(ApiConstants.CACHE_ADDRESSES_YEARS, address, addresses,
+                        response.get(ApiConstants.PARAM_LAST_MODIFIED),response.get(ApiConstants.PARAM_CACHE_CONTROL));
                 return addresses;
             } else if (response.get(ApiConstants.PARAM_STATUS).equals(HttpStatus.NOT_MODIFIED) && cachedValue != null) {
-                return getResultFromCachedValue(cachedValue);
+                return cacheHelper.getResultsFromCachedValue(cachedValue);
             }
             return new ArrayList<>();
         }
@@ -148,21 +153,21 @@ public class AddressDao {
         if (month.isEmpty()) {
             JSONObject cachedValue =
                     (JSONObject) cacheService.getCacheValue(ApiConstants.CACHE_ADDRESSES_MONTHS, address);
+            List<Address> validCacheResults = cacheHelper.getValidResultsFromCache(cachedValue);
             String lastModified = AddressHelper.getLastModified(cachedValue);
-
-            if (cachedValue != null  && cacheService.isInValidTimeRange(lastModified)) {
-                return getResultFromCachedValue(cachedValue);
+            if(validCacheResults != null){
+                return validCacheResults;
             }
             JSONObject response = addressService.getAddressByMonth(address, month, lastModified);
             if (response.get(ApiConstants.PARAM_STATUS).equals(HttpStatus.OK)) {
                 JSONArray results = (JSONArray) response.get(ApiConstants.PARAM_DATA);
                 List<Address> addresses = resultsToList(results).stream().map(id -> addAddressWithMonth(id, address))
                         .collect(Collectors.toList());
-                addToCache(ApiConstants.CACHE_ADDRESSES_MONTHS, address, addresses,
-                        response.get(ApiConstants.PARAM_LAST_MODIFIED));
+                cacheHelper.addToCache(ApiConstants.CACHE_ADDRESSES_MONTHS, address, addresses,
+                        response.get(ApiConstants.PARAM_LAST_MODIFIED),response.get(ApiConstants.PARAM_CACHE_CONTROL));
                 return addresses;
             } else if (response.get(ApiConstants.PARAM_STATUS).equals(HttpStatus.NOT_MODIFIED) && cachedValue != null) {
-                return getResultFromCachedValue(cachedValue);
+                return cacheHelper.getResultsFromCachedValue(cachedValue);
             }
             return new ArrayList<>();
         }
@@ -177,26 +182,27 @@ public class AddressDao {
         if (time.isEmpty()) {
             JSONObject cachedValue =
                     (JSONObject) cacheService.getCacheValue(ApiConstants.CACHE_ADDRESSES_TIMES, address);
+            List<Address> validCacheResults = cacheHelper.getValidResultsFromCache(cachedValue);
             String lastModified = AddressHelper.getLastModified(cachedValue);
-
-            if (cachedValue != null  && cacheService.isInValidTimeRange(lastModified)) {
-                return getResultFromCachedValue(cachedValue);
+            if(validCacheResults != null){
+                return validCacheResults;
             }
             JSONObject response = addressService.getAddressByTime(address, time, lastModified);
             if (response.get(ApiConstants.PARAM_STATUS).equals(HttpStatus.OK)) {
                 JSONArray results = (JSONArray) response.get(ApiConstants.PARAM_DATA);
                 List<Address> addresses = resultsToList(results).stream().map(id -> addAddressWithTime(id, address))
                         .collect(Collectors.toList());
-                addToCache(ApiConstants.CACHE_ADDRESSES_TIMES, address, addresses,
-                        response.get(ApiConstants.PARAM_LAST_MODIFIED));
+                cacheHelper.addToCache(ApiConstants.CACHE_ADDRESSES_TIMES, address, addresses,
+                        response.get(ApiConstants.PARAM_LAST_MODIFIED),response.get(ApiConstants.PARAM_CACHE_CONTROL));
                 return addresses;
             } else if (response.get(ApiConstants.PARAM_STATUS).equals(HttpStatus.NOT_MODIFIED) && cachedValue != null) {
-                return getResultFromCachedValue(cachedValue);
+                return cacheHelper.getResultsFromCachedValue(cachedValue);
             }
             return new ArrayList<>();
         }
         return getInfoAddress(address, null, time, null, null);
     }
+
 
     /**
      * Returns ipv4 list.
@@ -215,24 +221,6 @@ public class AddressDao {
     private List<String> resultsToList(JSONArray results) {
         return results.toList().stream().map(record -> ((ArrayList<String>) record).get(0))
                 .collect(Collectors.toList());
-    }
-
-    private void addToCache(String cacheName, Object cacheKey, List<Address> addresses, Object lastModified) {
-        JSONObject cacheValue = new JSONObject();
-        cacheValue.put(ApiConstants.PARAM_DATA, addresses);
-        cacheValue.put(ApiConstants.PARAM_LAST_MODIFIED, lastModified);
-        cacheService.addToCache(cacheName, cacheKey, cacheValue);
-    }
-
-    private List<Address> getResultFromCachedValue(JSONObject cachedValue) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            return objectMapper
-                    .readValue(cachedValue.get(ApiConstants.PARAM_DATA).toString(), new TypeReference<List<Address>>() {
-                    });
-        } catch (Exception e) {
-            return new ArrayList<>();
-        }
     }
 
 }

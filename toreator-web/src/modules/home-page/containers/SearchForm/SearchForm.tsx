@@ -13,6 +13,8 @@ import {
   getActiveFilter,
   getFilterInput,
   getIpAddress,
+  getRequestIpAddress,
+  getRequestParamFromFilter,
   getResponseIpAddress,
 } from "../../ducks/selectors/searchForm";
 import {validateInput} from "../../utils/validators";
@@ -76,6 +78,9 @@ export const getPropsForFilter = (filter: string) => {
 interface Props {
   activeFilter: string;
   lastIpAddress?: string;
+  history?: {
+    push(url: string): void;
+  };
   lastActiveFilter?: string;
   submitSearchForm?: (object: {}) => void;
   lastFilterInput?: string;
@@ -90,6 +95,7 @@ const SearchForm = ({
   submitSearchForm,
   lastFilterInput,
   isLoadingLastRequest,
+  history,
 }: Props) => {
   // @ts-ignore
   const [ipAddress, setIpAddress] = React.useState(lastIpAddress);
@@ -125,7 +131,13 @@ const SearchForm = ({
       setError(errors);
       return false;
     }
-    submitSearchForm({ipAddress, filterInput, activeFilter});
+
+    const activeFilterRequestParam = getRequestParamFromFilter(activeFilter);
+    history.push(
+      `/${getRequestIpAddress(ipAddress)}${
+        activeFilterRequestParam ? "/" + activeFilterRequestParam : ""
+      }${filterInput !== "" ? "/" + filterInput : ""}`,
+    );
   };
 
   return (

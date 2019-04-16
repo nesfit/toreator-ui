@@ -27,8 +27,11 @@ interface Props {
   location: {
     pathname: string;
   };
+  history?: {
+    push(url: string): void;
+  };
 }
-const HomePage = ({isLoading, location: {pathname}}: Props) => {
+const HomePage = ({isLoading, location: {pathname}, history}: Props) => {
   return (
     <Box>
       <Menu />
@@ -44,7 +47,7 @@ const HomePage = ({isLoading, location: {pathname}}: Props) => {
         >
           <FormattedMessage {...messages.header} />
         </Box>
-        <SearchForm />
+        <SearchForm history={history} />
         <Results pathname={pathname} />
         <Loading isLoading={isLoading}>
           <img height="80px" src={loading} />

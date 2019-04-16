@@ -19,6 +19,7 @@ public class ApiConstants {
     public static final String CACHE_REQUESTS = "CACHE_REQUESTS";
 
     public static final String PARAM_LAST_MODIFIED = "lastModified";
+    public static final String PARAM_CACHE_CONTROL = "cacheControl";
     public static final String PARAM_DATA = "data";
     public static final String PARAM_RESPONSE_BODY = "responseBody";
     public static final String PARAM_STATUS = "status";

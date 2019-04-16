@@ -1,9 +1,8 @@
 package cz.fit.vutbr.dao;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import cz.fit.vutbr.constants.ApiConstants;
 import cz.fit.vutbr.helper.AddressHelper;
+import cz.fit.vutbr.helper.CacheHelper;
 import cz.fit.vutbr.model.Info;
 import cz.fit.vutbr.service.CacheService;
 import cz.fit.vutbr.service.InfoService;
@@ -30,16 +29,19 @@ public class InfoDao {
     @Autowired
     CacheService cacheService;
 
+    @Autowired
+    CacheHelper cacheHelper;
+
     /**
      * Returns specific device address info.
      */
     public List<Info> getAddressInfo(String address) {
         if (!AddressHelper.hasNetworkPrefix(address)) {
             JSONObject cachedValue = (JSONObject) cacheService.getCacheValue(ApiConstants.CACHE_INFO, address);
+            List<Info> validCacheResults = cacheHelper.getValidResultsFromCache(cachedValue);
             String lastModified = AddressHelper.getLastModified(cachedValue);
-
-            if (cachedValue != null  && cacheService.isInValidTimeRange(lastModified)) {
-                return getResultFromCachedValue(cachedValue);
+            if(validCacheResults != null){
+                return validCacheResults;
             }
             JSONObject response = infoService.getAddressInfo(address, lastModified);
             return processApiResponse(response, address, cachedValue, ApiConstants.CACHE_INFO, address);
@@ -54,10 +56,10 @@ public class InfoDao {
         if (!AddressHelper.hasNetworkPrefix(address) && !AddressHelper.hasURLNetworkPrefix(address)) {
             JSONObject cachedValue = (JSONObject) cacheService.getCacheValue(ApiConstants.CACHE_INFO_DATES,
                     address + date);
+            List<Info> validCacheResults = cacheHelper.getValidResultsFromCache(cachedValue);
             String lastModified = AddressHelper.getLastModified(cachedValue);
-
-            if (cachedValue != null  && cacheService.isInValidTimeRange(lastModified)) {
-                return getResultFromCachedValue(cachedValue);
+            if(validCacheResults != null){
+                return validCacheResults;
             }
             JSONObject response = infoService.getAddressInfoWithDate(address, date, lastModified);
             return processApiResponse(response, address, cachedValue, ApiConstants.CACHE_INFO_DATES, address + date);
@@ -72,10 +74,10 @@ public class InfoDao {
         if (!AddressHelper.hasNetworkPrefix(address) && !AddressHelper.hasURLNetworkPrefix(address)) {
             JSONObject cachedValue = (JSONObject) cacheService.getCacheValue(ApiConstants.CACHE_INFO_TIMES,
                     address + time);
+            List<Info> validCacheResults = cacheHelper.getValidResultsFromCache(cachedValue);
             String lastModified = AddressHelper.getLastModified(cachedValue);
-
-            if (cachedValue != null  && cacheService.isInValidTimeRange(lastModified)) {
-                return getResultFromCachedValue(cachedValue);
+            if(validCacheResults != null){
+                return validCacheResults;
             }
             JSONObject response = infoService.getAddressInfoWithTime(address, time, lastModified);
             return processApiResponse(response, address, cachedValue, ApiConstants.CACHE_INFO_TIMES, address + time);
@@ -92,10 +94,10 @@ public class InfoDao {
         if (!AddressHelper.hasNetworkPrefix(address) && !AddressHelper.hasURLNetworkPrefix(address)) {
             JSONObject cachedValue = (JSONObject) cacheService.getCacheValue(ApiConstants.CACHE_INFO_YEARS,
                     address + year);
+            List<Info> validCacheResults = cacheHelper.getValidResultsFromCache(cachedValue);
             String lastModified = AddressHelper.getLastModified(cachedValue);
-
-            if (cachedValue != null  && cacheService.isInValidTimeRange(lastModified)) {
-                return getResultFromCachedValue(cachedValue);
+            if(validCacheResults != null){
+                return validCacheResults;
             }
             JSONObject response = infoService.getAddressInfoWithYear(address, year, lastModified);
             return processApiResponse(response, address, cachedValue, ApiConstants.CACHE_INFO_YEARS,
@@ -111,10 +113,10 @@ public class InfoDao {
         if (!AddressHelper.hasNetworkPrefix(address) && !AddressHelper.hasURLNetworkPrefix(address)) {
             JSONObject cachedValue = (JSONObject) cacheService.getCacheValue(ApiConstants.CACHE_INFO_MONTHS,
                     address + month);
+            List<Info> validCacheResults = cacheHelper.getValidResultsFromCache(cachedValue);
             String lastModified = AddressHelper.getLastModified(cachedValue);
-
-            if (cachedValue != null  && cacheService.isInValidTimeRange(lastModified)) {
-                return getResultFromCachedValue(cachedValue);
+            if(validCacheResults != null){
+                return validCacheResults;
             }
             JSONObject response = infoService.getAddressInfoWithMonth(address, month, lastModified);
             return processApiResponse(response, address, cachedValue, ApiConstants.CACHE_INFO_MONTHS,
@@ -133,14 +135,14 @@ public class InfoDao {
             JSONArray results = (JSONArray) response.get(ApiConstants.PARAM_DATA);
             List<Info> info = results.toList().stream()
                     .map(result -> addInfo(address, result)).collect(Collectors.toList());
-            addToCache(cacheName, cacheKey, info, response.get(ApiConstants.PARAM_LAST_MODIFIED));
+            cacheHelper.addToCache(cacheName, cacheKey, info, response.get(ApiConstants.PARAM_LAST_MODIFIED),
+                    response.get(ApiConstants.PARAM_CACHE_CONTROL));
             return info;
         } else if (response.get(ApiConstants.PARAM_STATUS).equals(HttpStatus.NOT_MODIFIED) && cachedValue != null) {
-            return getResultFromCachedValue(cachedValue);
+            return cacheHelper.getResultsFromCachedValue(cachedValue);
         }
         return new ArrayList<>();
     }
-
 
     private Info addInfo(String address, Object result) {
         Info info = new Info();
@@ -155,21 +157,4 @@ public class InfoDao {
         return info;
     }
 
-    private void addToCache(String cacheName, Object cacheKey, List<Info> info, Object lastModified) {
-        JSONObject cacheValue = new JSONObject();
-        cacheValue.put(ApiConstants.PARAM_DATA, info);
-        cacheValue.put(ApiConstants.PARAM_LAST_MODIFIED, lastModified);
-        cacheService.addToCache(cacheName, cacheKey, cacheValue);
-    }
-
-    private List<Info> getResultFromCachedValue(JSONObject cachedValue) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            return objectMapper.readValue(cachedValue.get(ApiConstants.PARAM_DATA).toString(),
-                    new TypeReference<List<Info>>() {
-            });
-        } catch (Exception e) {
-            return new ArrayList<>();
-        }
-    }
 }

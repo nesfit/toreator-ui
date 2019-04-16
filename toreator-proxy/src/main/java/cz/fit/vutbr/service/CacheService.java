@@ -16,4 +16,5 @@ public interface CacheService {
     Object getCacheValue(String cacheName, Object cacheKey);
 
     Boolean isInValidTimeRange(String lastModified);
+    Boolean isInValidTimeRange(String lastModified, long cacheControl);
 }

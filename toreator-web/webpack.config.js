@@ -112,7 +112,8 @@ module.exports = createConfig([
     setOutput({
       chunkFilename: "[name].[chunkhash:8].js",
       filename: "[name].[chunkhash:8].js",
-      path: path.resolve(__dirname, "build/prod")
+      path: path.resolve(__dirname, "build/prod"),
+      publicPath: "/"
     }),
     uglify({
       cache: true,

@@ -6,12 +6,14 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import static cz.fit.vutbr.constants.ApiConstants.PARAM_CACHE_CONTROL;
 import static cz.fit.vutbr.constants.ApiConstants.PARAM_LAST_MODIFIED;
 
 /**
  * Helper functions to parse address data.
  */
 public class AddressHelper {
+
 
     public static Boolean hasURLNetworkPrefix(String query) {
         return query.matches(".*-\\d\\d?\\d?$");
@@ -80,5 +82,9 @@ public class AddressHelper {
 
     public static String getLastModified(JSONObject object) {
         return object != null && object.get(PARAM_LAST_MODIFIED) != null ? object.get(PARAM_LAST_MODIFIED).toString() : null;
+    }
+
+    public static Long getCacheControl(JSONObject object) {
+        return object != null && object.get(PARAM_CACHE_CONTROL) != null ? Long.valueOf(object.get(PARAM_CACHE_CONTROL).toString()) : null;
     }
 }
