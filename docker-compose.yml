@@ -1,7 +1,7 @@
 version: '3'
 services:
   toreator-web:
-    build: ./toreator-web
+    image: nesatfit/toreator-web:latest
     networks:
     - toreator
     environment:
@@ -10,7 +10,7 @@ services:
     ports:
     - "3000:3000"
   toreator-proxy:
-    build: ./toreator-proxy
+    image: nesatfit/toreator-proxy:latest
     networks:
       - toreator
     ports:
