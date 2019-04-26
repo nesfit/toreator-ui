@@ -10,6 +10,8 @@ interface Props {
   reducers?: Spec[];
   sagas?: Spec[];
 }
+
+// Reducer and saga dynamic injector
 export const withInjectedReducersAndSagas = ({reducers, sagas}: Props) => (
   BaseComponent: React.ComponentType,
 ) => {

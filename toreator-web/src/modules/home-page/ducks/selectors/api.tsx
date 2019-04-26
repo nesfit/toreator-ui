@@ -1,7 +1,6 @@
 import {createSelector} from "reselect";
-import {API_REDUCER, ResultFilters} from "../../constants/toreator";
+import {API_REDUCER} from "../../constants/toreator";
 import {requestKeyMappings} from "../actions/api";
-import {getSearchForm} from "./searchForm";
 
 export const getApi = (state: any): any => state[API_REDUCER];
 

@@ -1,10 +1,6 @@
 package cz.fit.vutbr.helper;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import cz.fit.vutbr.constants.ApiConstants;
-import cz.fit.vutbr.model.Address;
 import cz.fit.vutbr.model.Response;
 import cz.fit.vutbr.service.CacheService;
 import org.json.JSONObject;
@@ -16,6 +12,9 @@ import java.util.List;
 
 import static com.sun.jmx.mbeanserver.Util.cast;
 
+/**
+ *  Helper functions for cache
+ */
 @Component
 public class CacheHelper {
 
