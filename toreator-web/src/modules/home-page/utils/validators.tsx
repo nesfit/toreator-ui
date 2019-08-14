@@ -27,6 +27,7 @@ export const validateInput = (address: string, filterInput?: string) => {
       .replace(/\//g, "")
       .replace(/:/g, "")
       .replace(/ /g, "")
+      .replace(/-/g, "")
       .match(/^\d+$/) === null
   ) {
     // @ts-ignore

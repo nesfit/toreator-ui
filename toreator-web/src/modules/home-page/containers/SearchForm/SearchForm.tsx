@@ -31,9 +31,9 @@ export const getPropsForFilter = (filter: string) => {
   switch (filter) {
     case FilterParams.MONTH: {
       return {
-        format: "####/##",
+        format: "####-##",
         mask: ["Y", "Y", "Y", "Y", "M", "M"],
-        placeholder: "YYYY/MM",
+        placeholder: "YYYY-MM",
       };
     }
     case FilterParams.YEAR: {
@@ -45,14 +45,14 @@ export const getPropsForFilter = (filter: string) => {
     }
     case FilterParams.DATE: {
       return {
-        format: "####/##/##",
+        format: "####-##-##",
         mask: ["Y", "Y", "Y", "Y", "M", "M", "D", "D"],
-        placeholder: "YYYY/MM/DD",
+        placeholder: "YYYY-MM-DD",
       };
     }
     case FilterParams.TIME: {
       return {
-        format: "####/##/## ##:##:##",
+        format: "####-##-## ##:##:##",
         mask: [
           "Y",
           "Y",
@@ -69,7 +69,7 @@ export const getPropsForFilter = (filter: string) => {
           "S",
           "S",
         ],
-        placeholder: "YYYY/MM/DD HH/MM/SS",
+        placeholder: "YYYY-MM-DD HH/MM/SS",
       };
     }
   }
