@@ -1,4 +1,5 @@
 import * as React from "react";
+import InfiniteScroll from "react-infinite-scroll-component";
 import {connect} from "react-redux";
 import Box from "../../../shared/components/Box/Box";
 import AddressList from "../../components/AddressList/AddressList";
@@ -169,6 +170,12 @@ class Results extends React.Component<Props, State> {
             <Box mt={4}>
               {resultDataType === "INFO" ? (
                 <InfoList ml={4} mr={4} pl={4} pr={4} pt={4} pb={4}>
+                  <InfiniteScroll
+                    dataLength={this.state.dataLength}
+                    next={this.fetchMoreData}
+                    hasMore={this.state.dataLength < results.length}
+                    loader={<Box />}
+                  >
                     {results
                       .slice(0, this.state.dataLength)
                       .map((result: any, index: number) => (
@@ -178,6 +185,7 @@ class Results extends React.Component<Props, State> {
                           getIpAddressInfo={this.getIpAddressInfo}
                         />
                       ))}
+                  </InfiniteScroll>
                 </InfoList>
               ) : (
                 <Table ml={4} mr={4} pl={2} pr={2} pt={4} pb={4}>
