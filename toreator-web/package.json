@@ -55,7 +55,7 @@
     "@types/styled-system": "^3.2.2",
     "dotenv": "6.0.0",
     "graphql-request": "^1.8.2",
-    "immer": "^2.0.0",
+    "immer": "^9.0.6",
     "ramda": "^0.26.1",
     "react": "16.8.3",
     "react-dom": "16.8.3",
